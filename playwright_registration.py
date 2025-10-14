@@ -2,7 +2,9 @@ from playwright.sync_api import sync_playwright, expect
 
 with sync_playwright() as playwright:
     browser = playwright.chromium.launch(headless=False)
-    page = browser.new_page()
+    context = browser.new_context()
+    page = context.new_page()
+    # page = browser.new_page()
 
     page.goto(" https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/registration")
 
@@ -18,9 +20,19 @@ with sync_playwright() as playwright:
     registration_button = page.get_by_test_id('registration-page-registration-button')
     registration_button.click()
 
-    header_dashboard = page.get_by_test_id('dashboard-toolbar-title-text')
-    expect(header_dashboard).to_be_visible()
-    expect(header_dashboard).to_have_text('Dashboard')
+    context.storage_state(path='browser-state.json')
+
+    # header_dashboard = page.get_by_test_id('dashboard-toolbar-title-text')
+    # expect(header_dashboard).to_be_visible()
+    # expect(header_dashboard).to_have_text('Dashboard')
 
 
+with sync_playwright() as playwright:
+    browser = playwright.chromium.launch(headless=False)
+    context = browser.new_context(storage_state='browser-state.json')
+    page = context.new_page()
+
+    page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/dashboard')
+
+    page.wait_for_timeout(5000)
 
